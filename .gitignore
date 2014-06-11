@@ -1,0 +1,9 @@
+# Ignore IDE settings
+*.iml
+.idea/
+
+
+# Ignore temp work dirs and files
+_/
+*~
+~*
