@@ -6,18 +6,22 @@ public class Checks
 {
 	private static ArrayList<String> inputCellArray = new ArrayList<String>();
 
-	public static boolean checkInputCellRight(String s)
+	public static int checkInputNumber(String s, int minNumber, int maxNumber)
 	{
-		if (!s.trim().isEmpty()) {
-			if (s.charAt(0) == '1' || s.charAt(0) == '2' || s.charAt(0) == '3') {
-				if (s.charAt(1) == 'A' || s.charAt(1) == 'B' || s.charAt(1) == 'C') {
-					return true;
-				} else
-					return false;
-			} else
-				return false;
+		int number = 0;
+		if (!s.isEmpty()) {
+
+			try {
+				number = Integer.parseInt(s);
+			} catch (NumberFormatException e) {
+				return 0;
+			}
+
+			if (number >= minNumber && number <= maxNumber) {
+				return number;
+			} else return 0;
 		} else
-			return false;
+			return number;
 	}
 
 	public static boolean checkInputCellBusy (int lineIndex, int columnIndex)

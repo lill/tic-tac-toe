@@ -19,15 +19,4 @@ public class Player
 	{
 		moveCount++;
 	}
-
-	public static int inputColumnNumber (char c)
-	{
-		if (c == 'A') {
-			return 0;
-		}
-		if (c == 'B') {
-			return 1;
-		} else
-			return 2;
-	}
 }
