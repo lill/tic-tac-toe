@@ -1,6 +1,6 @@
 package com.tictactoe;
 
-public class Player
+public class PlayerLogic
 {
 	private static char playerX = 'X';
 	private static char playerO = 'O';

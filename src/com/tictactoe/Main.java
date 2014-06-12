@@ -13,7 +13,7 @@ public class Main
 		System.out.println("Игра крестики-нолики.");
 
 		final int MIN_FIELD_SIZE = 3;
-		final int MAX_FIELD_SIZE = 9;
+		final int MAX_FIELD_SIZE = 26;
 		int fieldSize;
 		String input;
 
@@ -23,10 +23,8 @@ public class Main
 			fieldSize = Checks.checkInputNumber(input, MIN_FIELD_SIZE, MAX_FIELD_SIZE);
 			if (fieldSize == 0) {
 				System.out.println("Неверно! Попробуйте ещё раз.");
-			} else {
-				fieldSize += 1;
-				break;
 			}
+			else break;
 		}
 
 		Field field = new Field(fieldSize);
@@ -36,38 +34,28 @@ public class Main
 
 		for (int i = 0; i < fieldSize*fieldSize; i++) {
 
+			String cell;
 			int lineIndex;
 			int columnIndex;
 
-			System.out.println("Игрок " + Player.getCurrentPlayer() + ", ваш ход");
+			System.out.println("Игрок " + PlayerLogic.getCurrentPlayer() + ", ваш ход");
+			System.out.print("Введите номер строки и букву столбца(например, 2b или 1C): ");
 
 			while (true) {
-				while (true) {
-					System.out.print("Введите номер строки: ");
-					input = reader.readLine().trim();
-					lineIndex = Checks.checkInputNumber(input, 0, fieldSize);
-					if (lineIndex == 0) {
-						System.out.println("Неверно! Попробуйте ещё раз.");
-					} else {
-						break;
+				cell = reader.readLine().toUpperCase().trim();
+				PlayerMove move = Checks.checkInputCellRight(cell);
+
+				if (move == null) {
+					System.out.print("Игрок " + PlayerLogic.getCurrentPlayer() + ", такой ячейки не существует, введите другую: ");
+				} else {
+					lineIndex = move.inputLineIndex;
+					columnIndex = move.inputColumnIndex;
+					if (Checks.checkInputCellBusy(lineIndex, columnIndex)) {
+						System.out.print("Игрок " + PlayerLogic.getCurrentPlayer() + ", эта ячейка уже занята, введите другую: ");
 					}
+					else break;
 				}
 
-				while (true) {
-					System.out.print("Введите номер столбца: ");
-					input = reader.readLine().trim();
-					columnIndex = Checks.checkInputNumber(input, 0, fieldSize);
-					if (columnIndex == 0) {
-						System.out.println("Неверно! Попробуйте ещё раз.");
-					} else {
-						break;
-					}
-				}
-
-				if (Checks.checkInputCellBusy(lineIndex, columnIndex)) {
-					System.out.println("Игрок " + Player.getCurrentPlayer() + ", эта ячейка уже занята, введите другую");
-				} else
-					break;
 			}
 
 			field.eraseCellByPlayer(lineIndex, columnIndex);
@@ -75,10 +63,10 @@ public class Main
 			System.out.println();
 
 			if (field.checkWin()) {
-				System.out.println("Игрок " + Player.getCurrentPlayer() + ", вы победили!");
+				System.out.println("Игрок " + PlayerLogic.getCurrentPlayer() + ", вы победили!");
 				break;
 			} else
-				Player.setCurrentMove();
+				PlayerLogic.setCurrentMove();
 		}
 		System.out.println("Игра закончена.");
 
