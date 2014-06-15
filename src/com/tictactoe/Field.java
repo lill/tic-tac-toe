@@ -74,87 +74,122 @@ public class Field
 	public boolean checkWin()
 	{
 		for (int i = 0; i < fieldSize; i++) {
-			if (checkLineWin(i) || checkColumnWin(i) || checkFirstDiagonalWin() || checkSecondDiagonalWin()) {
+			if (checkLine(i) == 1 || checkColumn(i) == 1 || checkFirstDiagonal() == 1 || checkSecondDiagonal() == 1) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean checkLineWin(int lineNumber)
+	public boolean checkExit()
 	{
-		int firstCellIndex = 0;
-		int trueCount = 0;
-		char firstCellLine = field[firstCellIndex][lineNumber];
-		if (firstCellLine == 'X' || firstCellLine == 'O') {
-			trueCount++;
-			for (int i = 1; i < fieldSize; i++) {
-				if (firstCellLine == field[i][lineNumber]) {
-					trueCount++;
-				} else {
-					trueCount = 0;
-				}
-			}
-			return trueCount == fieldSize;
+		int failCount = 0;
+		int failField = fieldSize * 2 + 2;
+		for (int i = 0; i < fieldSize; i++) {
+			failCount += checkLine(i) + checkColumn(i);
 		}
-		else return false;
+		failCount += checkFirstDiagonal() + checkSecondDiagonal();
+		return failField + failCount == 0;
 	}
 
-	private boolean checkColumnWin(int columnNumber)
+	private int checkLine(int lineNumber)
 	{
-		int firstCellIndex = 0;
-		int trueCount = 0;
-		char firstCellLine = field[columnNumber][firstCellIndex];
-		if (firstCellLine == 'X' || firstCellLine == 'O') {
-			trueCount++;
-			for (int i = 1; i < fieldSize; i++) {
-				if (firstCellLine == field[columnNumber][i]) {
-					trueCount++;
-				} else {
-					trueCount = 0;
-				}
+		boolean containsX = false;
+		boolean containsO = false;
+		int countX = 0;
+		int countO = 0;
+		for (int i = 0; i < fieldSize; i++) {
+			if (field[i][lineNumber] == 'X') {
+				containsX = true;
+				countX++;
 			}
-			return trueCount == fieldSize;
+			if (field[i][lineNumber] == 'O') {
+				containsO = true;
+				countO++;
+			}
 		}
-		else return false;
+
+		if (containsX && containsO) {
+			return -1; // if line failed
+		} else
+		if (countX+countO != fieldSize) {
+			return 0;
+		} else return 1; // win
 	}
 
-	private boolean checkFirstDiagonalWin()
+	private int checkColumn(int columnNumber)
 	{
-		int firstCellIndex = 0;
-		int trueCount = 0;
-		char firstCellLine = field[firstCellIndex][firstCellIndex];
-		if (firstCellLine == 'X' || firstCellLine == 'O') {
-			trueCount++;
-			for (int i = 1; i < fieldSize; i++) {
-				if (firstCellLine == field[i][i]) {
-					trueCount++;
-				} else {
-					trueCount = 0;
-				}
+		boolean containsX = false;
+		boolean containsO = false;
+		int countX = 0;
+		int countO = 0;
+		for (int i = 0; i < fieldSize; i++) {
+			if (field[columnNumber][i] == 'X') {
+				containsX = true;
+				countX++;
 			}
-			return trueCount == fieldSize;
+			if (field[columnNumber][i] == 'O') {
+				containsO = true;
+				countO++;
+			}
 		}
-		else return false;
+
+		if (containsX && containsO) {
+			return -1; // if column failed
+		} else
+		if (countX+countO != fieldSize) {
+			return 0;
+		} else return 1; // win
 	}
 
-	private boolean checkSecondDiagonalWin()
+	private int checkFirstDiagonal()
 	{
-		int firstCellIndex = 0;
-		int trueCount = 0;
-		char firstCellLine = field[fieldSize-1][firstCellIndex];
-		if (firstCellLine == 'X' || firstCellLine == 'O') {
-			trueCount++;
-			for (int i = 1; i < fieldSize; i++) {
-				if (firstCellLine == field[fieldSize-1-i][i]) {
-					trueCount++;
-				} else {
-					trueCount = 0;
-				}
+		boolean containsX = false;
+		boolean containsO = false;
+		int countX = 0;
+		int countO = 0;
+		for (int i = 0; i < fieldSize; i++) {
+			if (field[i][i] == 'X') {
+				containsX = true;
+				countX++;
 			}
-			return trueCount == fieldSize;
+			if (field[i][i] == 'O') {
+				containsO = true;
+				countO++;
+			}
 		}
-		else return false;
+
+		if (containsX && containsO) {
+			return -1; // if diagonal failed
+		} else
+		if (countX+countO != fieldSize) {
+			return 0;
+		} else return 1; // win
+	}
+
+	private int checkSecondDiagonal()
+	{
+		boolean containsX = false;
+		boolean containsO = false;
+		int countX = 0;
+		int countO = 0;
+		for (int i = 0; i < fieldSize; i++) {
+			if (field[fieldSize-1-i][i] == 'X') {
+				containsX = true;
+				countX++;
+			}
+			if (field[fieldSize-1-i][i] == 'O') {
+				containsO = true;
+				countO++;
+			}
+		}
+
+		if (containsX && containsO) {
+			return -1;// if diagonal failed
+		} else
+		if (countX+countO != fieldSize) {
+			return 0;
+		} else return 1; // win
 	}
 
 }

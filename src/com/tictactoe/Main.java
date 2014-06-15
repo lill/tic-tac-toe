@@ -66,6 +66,9 @@ public class Main
 				System.out.println("Игрок " + PlayerLogic.getCurrentPlayer() + ", вы победили!");
 				break;
 			} else
+			if (field.checkExit()) {
+				break;
+			} else
 				PlayerLogic.setCurrentMove();
 		}
 		System.out.println("Игра закончена.");
