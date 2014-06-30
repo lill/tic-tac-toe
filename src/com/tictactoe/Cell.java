@@ -1,8 +1,9 @@
 package com.tictactoe;
 
+
 public class Cell
 {
-	public char value = ' ';
+	public char value = Game.SPACE;
 
 	@Override
 	public String toString()

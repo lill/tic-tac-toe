@@ -5,23 +5,40 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+
 public class ConsoleUI
 {
 	BufferedReader in;
 	PrintStream out;
 
-	public ConsoleUI() {
+
+	public ConsoleUI()
+	{
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = System.out;
 	}
 
-	public void onStart() {
+
+	public void onStart()
+	{
 		out.println("Игра крестики-нолики.");
 	}
 
-	public void theEnd() {
+	public void onWin(char currentPlayer)
+	{
+		out.println("Игрок " + currentPlayer + ", вы победили!");
+	}
+
+	public void onDraw()
+	{
+		out.println("Ничья!");
+	}
+
+	public void onEnd()
+	{
 		out.println("Игра закончена.");
 	}
+
 
 	public int getFieldSize(int minSize, int maxSize) throws IOException
 	{
@@ -38,6 +55,31 @@ public class ConsoleUI
 		return fieldSize;
 	}
 
+	public PlayerMove getMove(
+			char currentPlayer,
+			Function<String, PlayerMove> checkInputCell,
+			Function<PlayerMove, Boolean> checkInputCellBusy) throws IOException
+	{
+		out.println("Игрок " + currentPlayer + ", ваш ход");
+		out.print("Введите номер строки и букву столбца(например, 2b или 1C): ");
+
+		PlayerMove move;
+		while (true) {
+			String cell = in.readLine().toUpperCase().trim();
+			move = checkInputCell.apply(cell);
+			if (move == null) {
+				out.print("Игрок " + currentPlayer + ", такой ячейки не существует, введите другую: ");
+			} else {
+				if (checkInputCellBusy.apply(move)) {
+					out.print("Игрок " + currentPlayer + ", эта ячейка уже занята, введите другую: ");
+				}
+				else break;
+			}
+		}
+		return move;
+	}
+
+
 	public void showField(Field field)
 	{
 		showColumnIndex(field.fieldSize);
@@ -53,11 +95,10 @@ public class ConsoleUI
 
 	private void showLineIndex(int lineIndex)
 	{
-		if (lineIndex < 10) {
+		if (lineIndex < 10)
 			out.print(" " + lineIndex + " ");
-		} else {
+		else
 			out.print(lineIndex + " ");
-		}
 	}
 
 	private void showColumnIndex(int fieldSize)
@@ -68,33 +109,6 @@ public class ConsoleUI
 			out.print(" " + index + " ");
 		}
 		out.println();
-	}
-
-	public PlayerMove getMove(
-			Function<String, PlayerMove> checkInputCell,
-			Function<PlayerMove, Boolean> checkInputCellBusy) throws IOException
-	{
-		out.println("Игрок " + Game.getCurrentPlayer() + ", ваш ход");
-		out.print("Введите номер строки и букву столбца(например, 2b или 1C): ");
-
-		PlayerMove move;
-		while (true) {
-			String cell = in.readLine().toUpperCase().trim();
-			move = checkInputCell.apply(cell);
-			if (move == null) {
-				out.print("Игрок " + Game.getCurrentPlayer() + ", такой ячейки не существует, введите другую: ");
-			} else {
-				if (checkInputCellBusy.apply(move)) {
-					out.print("Игрок " + Game.getCurrentPlayer() + ", эта ячейка уже занята, введите другую: ");
-				}
-				else break;
-			}
-		}
-		return move;
-	}
-
-	public void onWin() {
-		out.println("Игрок " + Game.getCurrentPlayer() + ", вы победили!");
 	}
 
 

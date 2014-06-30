@@ -3,13 +3,17 @@ package com.tictactoe;
 import com.tictactoe.ConsoleUI.Function;
 import java.io.IOException;
 
+
 public class Game
 {
-	int fieldSize;
-	private static char playerX = 'X';
-	private static char playerO = 'O';
-	private static int moveCount = 1;
+	public static final char PLAYER_X  = 'X';
+	public static final char PLAYER_O  = 'O';
+	public static final char SPACE     = ' ';
+
+	private int moveCount = 1;
 	private boolean win = false;
+	private boolean draw = false;
+	private int fieldSize;
 
 
 	public void start() throws IOException
@@ -25,6 +29,7 @@ public class Game
 		for (int i = 0; i < fieldSize*fieldSize; i++) {
 
 			PlayerMove move = userUI.getMove(
+				getCurrentPlayer(),
 				new Function<String, PlayerMove>() {
 					@Override public PlayerMove apply(String s) {
 						return checkInputCell(s);
@@ -41,27 +46,38 @@ public class Game
 
 			userUI.showField(field);
 			if (this.win) {
-				userUI.onWin();
-				userUI.in.close();
+				userUI.onWin(getCurrentPlayer());
+				break;
+			}
+			else if (this.draw) {
+				userUI.onDraw();
 				break;
 			}
 			moveCount++;
 		}
-		userUI.theEnd();
+		userUI.onEnd();
 	}
 
-	public static char getCurrentPlayer()
-	{
-		if (moveCount%2 == 0) {
-			return playerO;
-		} else {
-			return playerX;
-		}
-	}
 
 	public void onWin() {
 		win = true;
 	}
+
+	public void onDraw()
+	{
+		draw = true;
+	}
+
+
+	public char getCurrentPlayer()
+	{
+		if (moveCount%2 == 0) {
+			return PLAYER_O;
+		} else {
+			return PLAYER_X;
+		}
+	}
+
 
 	public static int checkInputNumber(String s, int minNumber, int maxNumber)
 	{
